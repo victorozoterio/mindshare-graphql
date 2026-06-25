@@ -9,6 +9,10 @@
     "esModuleInterop": true,
     "types": ["node"],
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "baseUrl": ".",
+    "paths": {
+      "@prisma": ["prisma/generated/prisma/client"]
+    }
   }
 }
