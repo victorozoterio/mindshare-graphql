@@ -8,7 +8,7 @@ import {
 } from "type-graphql";
 import { IdeaModel } from "../models/idea.model";
 import { IdeaService } from "../services/idea.service";
-import { CreateIdeaInput } from "../dtos/input/idea.input";
+import { CreateIdeaInput, UpdateIdeaInput } from "../dtos/input/idea.input";
 import { IsAuth } from "../middlewares/auth.middleware";
 import { GqlUser } from "../graphql/decorators/user.decorator";
 import { User } from "@prisma";
@@ -27,6 +27,14 @@ export class IdeaResolver {
     @GqlUser() user: User,
   ): Promise<IdeaModel> {
     return this.ideaService.createIdea(data, user.id);
+  }
+
+  @Mutation(() => IdeaModel)
+  async updateIdea(
+    @Arg("data", () => UpdateIdeaInput) data: UpdateIdeaInput,
+    @Arg("id", () => String) id: string,
+  ): Promise<IdeaModel> {
+    return this.ideaService.updateIdea(id, data);
   }
 
   @FieldResolver(() => UserModel)

@@ -8,3 +8,15 @@ export class CreateIdeaInput {
   @Field(() => String, { nullable: true })
   description?: string;
 }
+
+@InputType()
+export class UpdateIdeaInput {
+  @Field(() => String)
+  id!: string;
+
+  @Field(() => String, { nullable: true })
+  title?: string;
+
+  @Field(() => String, { nullable: true })
+  description?: string;
+}
