@@ -1,7 +1,15 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "../prisma/generated/prisma/client";
+import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 
-const globalForPrisma = global as unknown as { prisma: PrismaClient };
+const adapter = new PrismaBetterSqlite3({
+  url: "file:./prisma/dev.db",
+});
 
-export const prismaClient = globalForPrisma.prisma || new PrismaClient();
+const globalForPrisma = global as unknown as {
+  prisma: PrismaClient | undefined;
+};
+
+export const prismaClient =
+  globalForPrisma.prisma ?? new PrismaClient({ adapter });
 
 globalForPrisma.prisma = prismaClient;
