@@ -11,13 +11,32 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Link } from "react-router-dom"
+import { useAuthStore } from "@/stores/auth"
+import { toast } from "sonner"
 
 export function Login() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [loading, setLoading] = useState(false)
+  const login = useAuthStore((state) => state.login)
 
-  const handleSubmit = () => {
-    
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
+
+    try {
+      const loginMutate = await login({
+        email,
+        password,
+      })
+      if (loginMutate) {
+        toast.success("Login realizado com sucesso!")
+      }
+    } catch (error) {
+      toast.success("Falha ao realizar o login!")
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -56,7 +75,7 @@ export function Login() {
                 required
               />
             </div>
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" disabled={loading}>
               Entrar
             </Button>
           </form>
