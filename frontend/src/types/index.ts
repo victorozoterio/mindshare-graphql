@@ -17,3 +17,33 @@ export interface LoginInput {
   email: string;
   password: string;
 }
+
+export interface Idea {
+  id: string;
+  title: string;
+  description?: string | null;
+  authorId: string;
+  author?: User;
+  voteCount?: number;
+  comments?: Comment[];
+  votes?: Vote[];
+  createdAt: string;
+  updatedAt?: string;
+}
+
+export interface Comment {
+  id: string;
+  ideaId: string;
+  authorId: string;
+  author?: User;
+  content: string;
+  createdAt: string;
+  updatedAt?: string;
+}
+
+export interface Vote {
+  id: string;
+  ideaId: string;
+  userId: string;
+  createdAt: string;
+}

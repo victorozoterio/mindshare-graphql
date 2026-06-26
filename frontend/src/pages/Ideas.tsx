@@ -4,9 +4,21 @@ import { Label } from "@/components/ui/label"
 import { Plus } from "lucide-react"
 import { useState } from "react"
 import { CreateIdeaDialog } from "./Ideas/components/CreateIdeaDialog"
+import { useQuery } from "@apollo/client/react"
+import type { Idea } from "@/types"
+import { LIST_IDEAS } from "@/lib/graphql/queries/Idea"
+import { IdeaCard } from "./Ideas/components/IdeaCard"
 
 export function Ideas() {
   const [openDialog, setOpenDialog] = useState(false)
+  const { data } = useQuery<{ listIdeas: Idea[] }>(LIST_IDEAS)
+  const [selectedIdeaId, setSelectedIdeaId] = useState<string | null>(null)
+
+  const ideas = data?.listIdeas || []
+
+  const handleIdeaClick = (ideaId: string) => {
+    setSelectedIdeaId(ideaId)
+  }
 
   return (
     <Page>
@@ -18,6 +30,15 @@ export function Ideas() {
             Nova ideia
           </Button>
         </div>
+      </div>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 pt-6">
+        {ideas.map((idea) => (
+          <IdeaCard
+            key={idea.id}
+            idea={idea}
+            onClick={() => handleIdeaClick(idea.id)}
+          />
+        ))}
       </div>
 
       <CreateIdeaDialog open={openDialog} onOpenChange={setOpenDialog} />
