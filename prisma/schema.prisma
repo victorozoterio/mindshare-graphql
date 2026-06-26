@@ -7,11 +7,19 @@ datasource db {
   provider = "sqlite"
 }
 
+enum Role {
+  owner
+  admin
+  member
+  viewer
+}
+
 model User {
   id        String    @id @default(uuid())
   name      String
   email     String    @unique
   password  String?
+  role      Role      @default(member)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   Idea      Idea[]
