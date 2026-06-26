@@ -27,6 +27,7 @@ interface AuthState {
   isAuthenticated: boolean;
   login: (data: LoginInput) => Promise<boolean>;
   signup: (data: RegisterInput) => Promise<boolean>;
+  logout: () => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -108,6 +109,14 @@ export const useAuthStore = create<AuthState>()(
           console.log("Erro ao fazer o cadastro");
           throw error;
         }
+      },
+      logout: () => {
+        set({
+          user: null,
+          token: null,
+          isAuthenticated: false,
+        });
+        apolloClient.clearStore();
       },
     }),
     {
