@@ -1,4 +1,4 @@
-import { prismaClient } from "../../prisma/prisma";
+import { prismaClient } from "prisma/prisma";
 import { LoginInput, RegisterInput } from "../dtos/input/auth.input";
 import { UserModel } from "../models/user.model";
 import { comparePassword, hashPassword } from "../utils/hash";

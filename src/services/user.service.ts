@@ -1,4 +1,4 @@
-import { prismaClient } from "../../prisma/prisma";
+import { prismaClient } from "prisma/prisma";
 import { CreateUserInput } from "../dtos/input/user.input";
 
 export class UserService {

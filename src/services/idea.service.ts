@@ -1,4 +1,4 @@
-import { prismaClient } from "../../prisma/prisma";
+import { prismaClient } from "prisma/prisma";
 import { CreateIdeaInput, UpdateIdeaInput } from "../dtos/input/idea.input";
 
 export class IdeaService {
@@ -54,5 +54,13 @@ export class IdeaService {
 
   async listIdeas() {
     return prismaClient.idea.findMany();
+  }
+
+  async findIdea(id: string) {
+    return prismaClient.idea.findUnique({
+      where: {
+        id,
+      },
+    });
   }
 }

@@ -1,7 +1,7 @@
 import { createParameterDecorator, ResolverData } from "type-graphql";
 import { GraphqlContext } from "../context";
 import { User } from "@prisma";
-import { prismaClient } from "../../../prisma/prisma";
+import { prismaClient } from "prisma/prisma";
 
 export function GqlUser() {
   return createParameterDecorator(
