@@ -22,7 +22,7 @@ export class CommentService {
     });
   }
 
-  async listByIdeaId(ideaId: string) {
+  async listCommentsByIdeaId(ideaId: string) {
     return prismaClient.comment.findMany({
       where: {
         ideaId,
