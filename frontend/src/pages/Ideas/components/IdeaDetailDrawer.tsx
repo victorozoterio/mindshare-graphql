@@ -1,12 +1,15 @@
 import { Drawer, DrawerContentRight } from "@/components/ui/drawer"
-import { useLazyQuery } from "@apollo/client/react"
+import { useLazyQuery, useMutation } from "@apollo/client/react"
 import { GET_IDEA } from "@/lib/graphql/queries/Idea"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import type { Idea } from "@/types"
 import { Button } from "@/components/ui/button"
 import { X } from "lucide-react"
 import { CommentsList } from "./CommentsList"
 import { CommentArea } from "./CommentArea"
+import { CREATE_COMMENT } from "@/lib/graphql/mutations/Comment"
+import { toast } from "sonner"
+import { TOGGLE_VOTE } from "@/lib/graphql/mutations/Vote"
 
 interface IdeaDetailDrawerProps {
   ideaId: string | null
@@ -19,9 +22,43 @@ export function IdeaDetailDrawer({
   onOpenChange,
   ideaId,
 }: IdeaDetailDrawerProps) {
+  const [commentContent, setCommentContent] = useState("")
+
   const [getIdeaQuery, { data, loading }] = useLazyQuery<{ getIdea: Idea }>(
     GET_IDEA
   )
+
+  const [createCommentMutation] = useMutation(CREATE_COMMENT, {
+    refetchQueries: [{ query: GET_IDEA, variables: { ideaId } }],
+    onCompleted: () => {
+      setCommentContent("")
+    },
+  })
+
+  const [toggleVoteMutation] = useMutation(TOGGLE_VOTE, {
+    refetchQueries: [{ query: GET_IDEA, variables: { ideaId } }],
+  })
+
+  const handleToggleVote = () => {
+    toggleVoteMutation({
+      variables: {
+        ideaId,
+      },
+    })
+  }
+
+  const handleAddComment = () => {
+    if (!commentContent) toast.error("Por favor insira um comentário")
+
+    createCommentMutation({
+      variables: {
+        ideaId,
+        data: {
+          content: commentContent,
+        },
+      },
+    })
+  }
 
   useEffect(() => {
     getIdeaQuery({
@@ -61,10 +98,10 @@ export function IdeaDetailDrawer({
           <CommentsList comments={idea?.comments || []} loading={loading} />
         </div>
         <CommentArea
-          commentContent={""}
-          setCommentContent={console.log}
-          handleAddComment={console.log}
-          handleVote={console.log}
+          commentContent={commentContent || ""}
+          setCommentContent={setCommentContent}
+          handleAddComment={handleAddComment}
+          handleVote={handleToggleVote}
           idea={idea}
         />
       </DrawerContentRight>

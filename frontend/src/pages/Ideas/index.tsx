@@ -3,17 +3,17 @@ import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Plus } from "lucide-react"
 import { useState } from "react"
-import { CreateIdeaDialog } from "./Ideas/components/CreateIdeaDialog"
+import { CreateIdeaDialog } from "./components/CreateIdeaDialog"
 import { useQuery } from "@apollo/client/react"
 import type { Idea } from "@/types"
 import { LIST_IDEAS } from "@/lib/graphql/queries/Idea"
-import { IdeaCard } from "./Ideas/components/IdeaCard"
-import { IdeaDetailDrawer } from "./Ideas/components/IdeaDetailDrawer"
+import { IdeaCard } from "./components/IdeaCard"
+import { IdeaDetailDrawer } from "./components/IdeaDetailDrawer"
 
 export function Ideas() {
   const [openDialog, setOpenDialog] = useState(false)
   const [openDrawer, setOpenDrawer] = useState(false)
-  const { data } = useQuery<{ listIdeas: Idea[] }>(LIST_IDEAS)
+  const { data, loading, refetch } = useQuery<{ listIdeas: Idea[] }>(LIST_IDEAS)
   const [selectedIdeaId, setSelectedIdeaId] = useState<string | null>(null)
 
   const ideas = data?.listIdeas || []
@@ -35,7 +35,14 @@ export function Ideas() {
         </div>
       </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 pt-6">
-        {ideas.map((idea) => (
+        {loading &&
+          Array.from({ length: 4 }).map((_, i) => (
+            <div
+              key={`idea-skeleton-${i}`}
+              className="h-32 rounded-lg border border-dashed border-muted-foreground/30"
+            />
+          ))}
+        {!loading && ideas.map((idea) => (
           <IdeaCard
             key={idea.id}
             idea={idea}
@@ -48,8 +55,7 @@ export function Ideas() {
         onOpenChange={setOpenDrawer}
         ideaId={selectedIdeaId}
       />
-
-      <CreateIdeaDialog open={openDialog} onOpenChange={setOpenDialog} />
+      <CreateIdeaDialog open={openDialog} onOpenChange={setOpenDialog} onCreated={() => refetch()} />
     </Page>
   )
 }
