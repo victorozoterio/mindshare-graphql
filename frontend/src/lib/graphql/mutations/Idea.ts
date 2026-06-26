@@ -12,7 +12,7 @@ export const CREATE_IDEA = gql`
         name
         email
       }
-      countVotes
+      voteCount
       createdAt
       updatedAt
     }

@@ -10,6 +10,9 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
+import { useMutation } from "@apollo/client/react"
+import { CREATE_IDEA } from "@/lib/graphql/mutations/Idea"
+import { toast } from "sonner"
 
 interface CreateIdeaDialogProps {
   open: boolean
@@ -25,8 +28,27 @@ export function CreateIdeaDialog({
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
 
+  const [createIdea, { loading }] = useMutation(CREATE_IDEA, {
+    onCompleted() {
+      toast.success("Idea criada com sucesso")
+      onOpenChange(false)
+      onCreated?.()
+    },
+    onError() {
+      toast.error("Falha ao criar a ideia")
+    },
+  })
+
   const handleSubmit = (e: React.FormEvent) => {
-    
+    e.preventDefault()
+    createIdea({
+      variables: {
+        data: {
+          title,
+          description,
+        },
+      },
+    })
   }
 
   const handleCancel = () => {
@@ -57,6 +79,7 @@ export function CreateIdeaDialog({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="w-full"
+              disabled={loading}
             />
           </div>
           <div className="space-y-1">
@@ -70,13 +93,14 @@ export function CreateIdeaDialog({
               onChange={(e) => setDescription(e.target.value)}
               rows={6}
               className="resize-none"
+              disabled={loading}
             />
           </div>
           <div className="flex justify-end gap-3 pt-2">
             <Button type="button" variant="outline" onClick={handleCancel}>
               Cancelar
             </Button>
-            <Button type="submit">
+            <Button type="submit" disabled={loading}>
               Salvar
             </Button>
           </div>
