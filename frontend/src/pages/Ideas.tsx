@@ -8,9 +8,11 @@ import { useQuery } from "@apollo/client/react"
 import type { Idea } from "@/types"
 import { LIST_IDEAS } from "@/lib/graphql/queries/Idea"
 import { IdeaCard } from "./Ideas/components/IdeaCard"
+import { IdeaDetailDrawer } from "./Ideas/components/IdeaDetailDrawer"
 
 export function Ideas() {
   const [openDialog, setOpenDialog] = useState(false)
+  const [openDrawer, setOpenDrawer] = useState(false)
   const { data } = useQuery<{ listIdeas: Idea[] }>(LIST_IDEAS)
   const [selectedIdeaId, setSelectedIdeaId] = useState<string | null>(null)
 
@@ -18,13 +20,14 @@ export function Ideas() {
 
   const handleIdeaClick = (ideaId: string) => {
     setSelectedIdeaId(ideaId)
+    setOpenDrawer(true)
   }
 
   return (
     <Page>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <Label className="text-3xl font-medium text-purple-600">Ideais</Label>
+          <Label className="text-3xl font-medium text-purple-600">Ideias</Label>
           <Button onClick={() => setOpenDialog(true)}>
             <Plus className="mr-2 h-4 w-4" />
             Nova ideia
@@ -40,6 +43,11 @@ export function Ideas() {
           />
         ))}
       </div>
+      <IdeaDetailDrawer
+        open={openDrawer}
+        onOpenChange={setOpenDrawer}
+        ideaId={selectedIdeaId}
+      />
 
       <CreateIdeaDialog open={openDialog} onOpenChange={setOpenDialog} />
     </Page>

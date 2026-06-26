@@ -1,9 +1,9 @@
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import { useAuthStore } from "@/stores/auth"
 import logoIcon from "@/assets/logo-icon.svg"
-import { Button } from "/ui/button"
+import { Button } from "@/components/ui/button"
 import { Lightbulb, LogOut, Users } from "lucide-react"
-import { Avatar, AvatarFallback } from "./ui/avatar"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 
 export function Header() {
   const { user, logout, isAuthenticated } = useAuthStore()
@@ -32,7 +32,7 @@ export function Header() {
                 variant={isIdeasPage ? "default" : "ghost"}
               >
                 <Lightbulb className="h-4 w-4" />
-                Ideais
+                Ideias
               </Button>
             </Link>
             <Link to="/members">
