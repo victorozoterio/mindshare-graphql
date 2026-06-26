@@ -10,10 +10,14 @@ import type { User } from "@/types"
 import { MemberCard } from "./components/MemberCard"
 import { useAuthStore } from "@/stores/auth"
 import { InviteMemberDialog } from "./components/InviteMemberDialog"
+import { EditMemberDialog } from "./components/EditMemberDialog"
+import { DeleteMemberDialog } from "./components/DeleteMemberDialog"
 
 export function Members() {
   const [searchQuery, setSearchQuery] = useState("")
   const [openInviteDialog, setOpenInviteDialog] = useState(false)
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
+  const [openEditMemberDialog, setOpenEditMemberDialog] = useState(false)
   const [member, setMember] = useState<User | null>(null)
 
   const currentUserId = useAuthStore((state) => state.user?.id)
@@ -26,9 +30,11 @@ export function Members() {
   }
   const handleEditUser = (editMember: User) => {
     setMember(editMember)
+    setOpenEditMemberDialog(true)
   }
   const handleDeleteUser = (deleteMember: User) => {
     setMember(deleteMember)
+    setOpenDeleteDialog(true)
   }
 
   const members = data?.listUsers ?? []
@@ -83,6 +89,19 @@ export function Members() {
         open={openInviteDialog}
         onOpenChange={setOpenInviteDialog}
         onCreated={() => refetch()}
+      />
+
+      <EditMemberDialog
+        open={openEditMemberDialog}
+        onOpenChange={setOpenEditMemberDialog}
+        onUpdated={() => refetch()}
+        member={member}
+      />
+
+      <DeleteMemberDialog
+        open={openDeleteDialog}
+        onOpenChange={setOpenDeleteDialog}
+        member={member}
       />
     </Page>
   )

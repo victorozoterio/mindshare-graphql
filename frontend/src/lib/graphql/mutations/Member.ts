@@ -11,3 +11,21 @@ export const CREATE_USER = gql`
     }
   }
 `;
+
+export const UPDATE_USER = gql`
+  mutation UpdateUser($id: String!, $data: UpdateUserInput!) {
+    updateUser(id: $id, data: $data) {
+      id
+      name
+      email
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const DELETE_USER = gql`
+  mutation DeleteUser($id: String!) {
+    deleteUser(id: $id)
+  }
+`;
